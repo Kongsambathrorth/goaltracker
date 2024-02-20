@@ -20,6 +20,25 @@ class _EmptyListComponentWidgetState extends State<EmptyListComponentWidget>
   late EmptyListComponentModel _model;
 
   final animationsMap = {
+    'rowOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effects: [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 300.ms,
+          duration: 300.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        ScaleEffect(
+          curve: Curves.easeInOut,
+          delay: 600.ms,
+          duration: 600.ms,
+          begin: const Offset(2.0, 2.0),
+          end: const Offset(1.0, 1.0),
+        ),
+      ],
+    ),
     'textOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effects: [
@@ -66,19 +85,24 @@ class _EmptyListComponentWidgetState extends State<EmptyListComponentWidget>
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          child: Align(
-            alignment: const AlignmentDirectional(0.0, 0.0),
-            child: Text(
-              'Hit the + button to begin',
-              style: FlutterFlowTheme.of(context).bodyMedium,
-            ).animateOnPageLoad(animationsMap['textOnPageLoadAnimation']!),
+    return Align(
+      alignment: const AlignmentDirectional(0.0, -1.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Align(
+              alignment: const AlignmentDirectional(0.0, -1.0),
+              child: Text(
+                'Hit the + button to begin',
+                style: FlutterFlowTheme.of(context).bodyMedium,
+              ).animateOnPageLoad(animationsMap['textOnPageLoadAnimation']!),
+            ),
           ),
-        ),
-      ],
+        ],
+      ).animateOnPageLoad(animationsMap['rowOnPageLoadAnimation']!),
     );
   }
 }

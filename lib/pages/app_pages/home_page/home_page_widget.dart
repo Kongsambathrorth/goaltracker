@@ -67,10 +67,16 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             builder: (context) {
               return Padding(
                 padding: MediaQuery.viewInsetsOf(context),
-                child: const CreatGoalComponentWidget(),
+                child: const SizedBox(
+                  height: 500.0,
+                  child: CreatGoalComponentWidget(),
+                ),
               );
             },
           ).then((value) => safeSetState(() {}));
+
+          setState(() => _model.requestCompleter = null);
+          await _model.waitForRequestCompleted();
         },
         backgroundColor: FlutterFlowTheme.of(context).primary,
         elevation: 8.0,
@@ -191,7 +197,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           future: (_model.requestCompleter ??=
                                   Completer<List<GoalsRow>>()
                                     ..complete(GoalsTable().queryRows(
-                                      queryFn: (q) => q.order('created_at'),
+                                      queryFn: (q) => q
+                                          .eq(
+                                            'archived',
+                                            FFAppState().filter.archived,
+                                          )
+                                          .order('created_at'),
                                     )))
                               .future,
                           builder: (context, snapshot) {
@@ -230,7 +241,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     highlightColor: Colors.transparent,
                                     onTap: () async {
                                       context.goNamed(
-                                        'TasksPage',
+                                        'TaskPage',
                                         queryParameters: {
                                           'goalId': serializeParam(
                                             listViewGoalsRow.id,
@@ -291,244 +302,224 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       child: Align(
                                         alignment:
                                             const AlignmentDirectional(0.0, 0.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Align(
-                                              alignment: const AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SingleChildScrollView(
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      children: [
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          children: [
-                                                            Align(
-                                                              alignment:
-                                                                  const AlignmentDirectional(
-                                                                      -1.0,
-                                                                      0.0),
-                                                              child: Text(
-                                                                valueOrDefault<
-                                                                    String>(
-                                                                  listViewGoalsRow
-                                                                      .title,
-                                                                  'title',
-                                                                ),
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .start,
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .titleSmall
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Poppins',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                    ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          children: [
-                                                            Align(
-                                                              alignment:
-                                                                  const AlignmentDirectional(
-                                                                      0.0, 0.0),
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            6.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
+                                        child: InkWell(
+                                          splashColor: Colors.transparent,
+                                          focusColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          highlightColor: Colors.transparent,
+                                          onTap: () async {
+                                            context.pushNamed(
+                                              'TaskPage',
+                                              queryParameters: {
+                                                'goalId': serializeParam(
+                                                  0,
+                                                  ParamType.int,
+                                                ),
+                                              }.withoutNulls,
+                                            );
+                                          },
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Align(
+                                                alignment: const AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SingleChildScrollView(
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            children: [
+                                                              Align(
+                                                                alignment:
+                                                                    const AlignmentDirectional(
+                                                                        -1.0,
+                                                                        0.0),
                                                                 child: Text(
-                                                                  'This is a test',
+                                                                  valueOrDefault<
+                                                                      String>(
+                                                                    listViewGoalsRow
+                                                                        .title,
+                                                                    'title',
+                                                                  ),
                                                                   textAlign:
                                                                       TextAlign
                                                                           .start,
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .bodyMedium
+                                                                      .titleSmall
                                                                       .override(
                                                                         fontFamily:
                                                                             'Poppins',
-                                                                        fontSize:
-                                                                            12.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
                                                                       ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              decoration: const BoxDecoration(),
-                                              child: Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        5.0, 0.0, 0.0, 0.0),
-                                                child: Stack(
-                                                  alignment:
-                                                      const AlignmentDirectional(
-                                                          0.0, 0.0),
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  5.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child:
-                                                          LinearPercentIndicator(
-                                                        percent: listViewGoalsRow
-                                                                .progress
-                                                                .toDouble() /
-                                                            100,
-                                                        lineHeight: 5.0,
-                                                        animation: true,
-                                                        animateFromLastPercent:
-                                                            true,
-                                                        progressColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .tertiary,
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .accent4,
-                                                        barRadius:
-                                                            const Radius.circular(
-                                                                5.0),
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      width: 40.0,
-                                                      height: 25.0,
-                                                      decoration: BoxDecoration(
-                                                        color: FlutterFlowTheme
-                                                                .of(context)
-                                                            .secondaryBackground,
-                                                        borderRadius:
-                                                            const BorderRadius.only(
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  16.0),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  16.0),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  16.0),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  16.0),
-                                                        ),
-                                                        border: Border.all(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .accent3,
-                                                        ),
-                                                      ),
-                                                      child: Align(
-                                                        alignment:
-                                                            const AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child: Text(
-                                                          '${listViewGoalsRow.progress.toString()}%',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodySmall
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Poppins',
-                                                                fontSize: 10.0,
+                                                            ],
+                                                          ),
+                                                          Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            children: [
+                                                              Align(
+                                                                alignment:
+                                                                    const AlignmentDirectional(
+                                                                        0.0,
+                                                                        0.0),
+                                                                child: Padding(
+                                                                  padding: const EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          6.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child: Text(
+                                                                    'This is a test',
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .start,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyMedium
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Poppins',
+                                                                          fontSize:
+                                                                              12.0,
+                                                                        ),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                        ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      16.0, 0.0, 16.0, 0.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                0.0, 5.0),
-                                                    child: FaIcon(
-                                                      FontAwesomeIcons.tasks,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondaryText,
-                                                      size: 18.0,
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(2.0, 0.0,
-                                                                0.0, 5.0),
-                                                    child: Text(
-                                                      '${listViewGoalsRow.noTasks.toString()} / ${listViewGoalsRow.noTasksCom.toString()}',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Poppins',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondaryText,
-                                                              ),
-                                                    ),
-                                                  ),
-                                                  Align(
+                                              Container(
+                                                decoration: const BoxDecoration(),
+                                                child: Padding(
+                                                  padding: const EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          5.0, 0.0, 0.0, 0.0),
+                                                  child: Stack(
                                                     alignment:
                                                         const AlignmentDirectional(
-                                                            1.0, 0.0),
-                                                    child: Padding(
+                                                            0.0, 0.0),
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    5.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child:
+                                                            LinearPercentIndicator(
+                                                          percent: 0.5,
+                                                          lineHeight: 5.0,
+                                                          animation: true,
+                                                          animateFromLastPercent:
+                                                              true,
+                                                          progressColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .tertiary,
+                                                          backgroundColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .accent4,
+                                                          barRadius:
+                                                              const Radius.circular(
+                                                                  5.0),
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        width: 40.0,
+                                                        height: 25.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryBackground,
+                                                          borderRadius:
+                                                              const BorderRadius.only(
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    16.0),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    16.0),
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    16.0),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    16.0),
+                                                          ),
+                                                          border: Border.all(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .accent3,
+                                                          ),
+                                                        ),
+                                                        child: Align(
+                                                          alignment:
+                                                              const AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                          child: Text(
+                                                            '${listViewGoalsRow.progress.toString()}%',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodySmall
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  fontSize:
+                                                                      10.0,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        16.0, 0.0, 16.0, 0.0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Padding(
                                                       padding:
                                                           const EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  170.0,
+                                                                  0.0,
                                                                   0.0,
                                                                   0.0,
                                                                   5.0),
-                                                      child: Icon(
-                                                        Icons.calendar_today,
+                                                      child: FaIcon(
+                                                        FontAwesomeIcons.tasks,
                                                         color:
                                                             FlutterFlowTheme.of(
                                                                     context)
@@ -536,33 +527,80 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                                         size: 18.0,
                                                       ),
                                                     ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                1.0, 5.0),
-                                                    child: Text(
-                                                      dateTimeFormat(
-                                                          'd/M/y',
-                                                          dateTimeFromSecondsSinceEpoch(
-                                                              valueOrDefault<
-                                                                  int>(
-                                                            listViewGoalsRow
-                                                                .createdAt
-                                                                ?.secondsSinceEpoch,
-                                                            0,
-                                                          ))),
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium,
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  2.0,
+                                                                  0.0,
+                                                                  0.0,
+                                                                  5.0),
+                                                      child: Text(
+                                                        '${listViewGoalsRow.noTasks} / ${listViewGoalsRow.noTasksCom}',
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Poppins',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .secondaryText,
+                                                                ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    Align(
+                                                      alignment:
+                                                          const AlignmentDirectional(
+                                                              1.0, 0.0),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    170.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    5.0),
+                                                        child: Icon(
+                                                          Icons.calendar_today,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
+                                                          size: 18.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  0.0,
+                                                                  1.0,
+                                                                  5.0),
+                                                      child: Text(
+                                                        dateTimeFormat(
+                                                            'd/M/y',
+                                                            dateTimeFromSecondsSinceEpoch(
+                                                                valueOrDefault<
+                                                                    int>(
+                                                              listViewGoalsRow
+                                                                  .createdAt
+                                                                  ?.secondsSinceEpoch,
+                                                              0,
+                                                            ))),
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),

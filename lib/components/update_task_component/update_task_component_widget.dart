@@ -10,10 +10,10 @@ export 'update_task_component_model.dart';
 class UpdateTaskComponentWidget extends StatefulWidget {
   const UpdateTaskComponentWidget({
     super.key,
-    required this.rowtask,
+    required this.rowaTask,
   });
 
-  final TasksRow? rowtask;
+  final TasksRow? rowaTask;
 
   @override
   State<UpdateTaskComponentWidget> createState() =>
@@ -33,6 +33,14 @@ class _UpdateTaskComponentWidgetState extends State<UpdateTaskComponentWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => UpdateTaskComponentModel());
+
+    _model.taskTitleController ??=
+        TextEditingController(text: widget.rowaTask?.title);
+    _model.taskTitleFocusNode ??= FocusNode();
+
+    _model.taskDescriptionController ??=
+        TextEditingController(text: widget.rowaTask?.description);
+    _model.taskDescriptionFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -91,40 +99,160 @@ class _UpdateTaskComponentWidgetState extends State<UpdateTaskComponentWidget> {
               ),
               Flexible(
                 child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 0.0, 0.0),
-                          child: Text(
-                            'Update Task',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineMedium
-                                .override(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 24.0,
-                                ),
-                          ),
+                  padding:
+                      const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
+                  child: Text(
+                    'Create Task',
+                    style: FlutterFlowTheme.of(context).headlineMedium.override(
+                          fontFamily: 'Poppins',
+                          fontSize: 24.0,
                         ),
-                      ),
-                    ],
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Align(
-                        alignment: const AlignmentDirectional(0.0, 0.0),
+                padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
+                child: TextFormField(
+                  controller: _model.taskTitleController,
+                  focusNode: _model.taskTitleFocusNode,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Enter the goal title...',
+                    hintStyle:
+                        FlutterFlowTheme.of(context).labelMedium.override(
+                              fontFamily: 'Plus Jakarta Sans',
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).accent3,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).secondary,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).alternate,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).alternate,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    contentPadding:
+                        const EdgeInsetsDirectional.fromSTEB(20.0, 32.0, 20.0, 12.0),
+                  ),
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                  textAlign: TextAlign.start,
+                  validator:
+                      _model.taskTitleControllerValidator.asValidator(context),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
+                child: TextFormField(
+                  controller: _model.taskDescriptionController,
+                  focusNode: _model.taskDescriptionFocusNode,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Enter your goal description...',
+                    hintStyle:
+                        FlutterFlowTheme.of(context).labelMedium.override(
+                              fontFamily: 'Plus Jakarta Sans',
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).accent3,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).secondary,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).alternate,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).alternate,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    contentPadding:
+                        const EdgeInsetsDirectional.fromSTEB(20.0, 32.0, 20.0, 12.0),
+                  ),
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily: 'Poppins',
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                  textAlign: TextAlign.start,
+                  maxLines: 4,
+                  keyboardType: TextInputType.multiline,
+                  validator: _model.taskDescriptionControllerValidator
+                      .asValidator(context),
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: Align(
+                      alignment: const AlignmentDirectional(0.0, 0.0),
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0.0, 10.0, 0.0, 10.0),
                         child: FFButtonWidget(
-                          onPressed: () {
-                            print('TaskUpdateButton pressed ...');
+                          onPressed: () async {
+                            if (_model.formKey.currentState == null ||
+                                !_model.formKey.currentState!.validate()) {
+                              return;
+                            }
+                            await TasksTable().update(
+                              data: {
+                                'title': _model.taskTitleController.text,
+                                'description':
+                                    _model.taskDescriptionController.text,
+                              },
+                              matchingRows: (rows) => rows.eq(
+                                'id',
+                                widget.rowaTask?.id,
+                              ),
+                            );
+                            Navigator.pop(context);
                           },
                           text: 'Update Task',
                           options: FFButtonOptions(
@@ -152,8 +280,8 @@ class _UpdateTaskComponentWidgetState extends State<UpdateTaskComponentWidget> {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),

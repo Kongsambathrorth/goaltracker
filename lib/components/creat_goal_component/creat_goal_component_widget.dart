@@ -293,8 +293,8 @@ class _CreatGoalComponentWidgetState extends State<CreatGoalComponentWidget> {
                               'progress': (_model.goalProgressValue!).round(),
                               'archived': false,
                               'user_id': currentUserUid,
-                              'no_tasks': 0,
-                              'no_tasks_com': 0,
+                              'no_tasks': '0',
+                              'no_tasks_com': '0',
                             });
                             Navigator.pop(context);
                           },

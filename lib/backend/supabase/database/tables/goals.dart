@@ -41,9 +41,9 @@ class GoalsRow extends SupabaseDataRow {
   bool get archived => getField<bool>('archived')!;
   set archived(bool value) => setField<bool>('archived', value);
 
-  int get noTasks => getField<int>('no_tasks')!;
-  set noTasks(int value) => setField<int>('no_tasks', value);
+  String get noTasks => getField<String>('no_tasks')!;
+  set noTasks(String value) => setField<String>('no_tasks', value);
 
-  int get noTasksCom => getField<int>('no_tasks_com')!;
-  set noTasksCom(int value) => setField<int>('no_tasks_com', value);
+  String get noTasksCom => getField<String>('no_tasks_com')!;
+  set noTasksCom(String value) => setField<String>('no_tasks_com', value);
 }

@@ -1,10 +1,10 @@
 import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'dart:async';
-import 'tasks_page_widget.dart' show TasksPageWidget;
+import 'task_page_widget.dart' show TaskPageWidget;
 import 'package:flutter/material.dart';
 
-class TasksPageModel extends FlutterFlowModel<TasksPageWidget> {
+class TaskPageModel extends FlutterFlowModel<TaskPageWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();

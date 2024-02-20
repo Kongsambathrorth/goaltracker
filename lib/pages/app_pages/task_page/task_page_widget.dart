@@ -1,21 +1,20 @@
 import '/backend/supabase/supabase.dart';
 import '/components/creat_task_component/creat_task_component_widget.dart';
+import '/components/empty_list_component/empty_list_component_widget.dart';
 import '/components/update_task_component/update_task_component_widget.dart';
-import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'tasks_page_model.dart';
-export 'tasks_page_model.dart';
+import 'task_page_model.dart';
+export 'task_page_model.dart';
 
-class TasksPageWidget extends StatefulWidget {
-  const TasksPageWidget({
+class TaskPageWidget extends StatefulWidget {
+  const TaskPageWidget({
     super.key,
     required this.goalId,
   });
@@ -23,34 +22,18 @@ class TasksPageWidget extends StatefulWidget {
   final int? goalId;
 
   @override
-  State<TasksPageWidget> createState() => _TasksPageWidgetState();
+  State<TaskPageWidget> createState() => _TaskPageWidgetState();
 }
 
-class _TasksPageWidgetState extends State<TasksPageWidget>
-    with TickerProviderStateMixin {
-  late TasksPageModel _model;
+class _TaskPageWidgetState extends State<TaskPageWidget> {
+  late TaskPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  final animationsMap = {
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 300.ms,
-          begin: const Offset(0.0, 5.0),
-          end: const Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-  };
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => TasksPageModel());
+    _model = createModel(context, () => TaskPageModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -122,19 +105,22 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
           top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    InkWell(
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 25.0, 0.0),
+                    child: InkWell(
                       splashColor: Colors.transparent,
                       focusColor: Colors.transparent,
                       hoverColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onTap: () async {
-                        context.goNamed(
+                        context.pushNamed(
                           'HomePage',
                           extra: <String, dynamic>{
                             kTransitionInfoKey: const TransitionInfo(
@@ -151,40 +137,34 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
                         size: 24.0,
                       ),
                     ),
-                    Align(
-                      alignment: const AlignmentDirectional(0.0, 0.0),
-                      child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 0.0),
-                        child: Text(
-                          ' Goal Tasks',
-                          style: FlutterFlowTheme.of(context)
-                              .headlineMedium
-                              .override(
+                  ),
+                  Align(
+                    alignment: const AlignmentDirectional(0.0, 0.0),
+                    child: Text(
+                      'Goal Task',
+                      style:
+                          FlutterFlowTheme.of(context).headlineMedium.override(
                                 fontFamily: 'Poppins',
                                 fontSize: 24.0,
                               ),
-                        ),
-                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    FutureBuilder<List<TasksRow>>(
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                    child: FutureBuilder<List<TasksRow>>(
                       future: (_model.requestCompleter ??=
                               Completer<List<TasksRow>>()
                                 ..complete(TasksTable().queryRows(
-                                  queryFn: (q) => q
-                                      .eq(
-                                        'goal_id',
-                                        widget.goalId,
-                                      )
-                                      .order('created_at'),
+                                  queryFn: (q) => q.eq(
+                                    'goal_id',
+                                    widget.goalId,
+                                  ),
                                 )))
                           .future,
                       builder: (context, snapshot) {
@@ -203,9 +183,14 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
                           );
                         }
                         List<TasksRow> listViewTasksRowList = snapshot.data!;
+                        if (listViewTasksRowList.isEmpty) {
+                          return SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.8,
+                            child: const EmptyListComponentWidget(),
+                          );
+                        }
                         return ListView.builder(
                           padding: EdgeInsets.zero,
-                          primary: false,
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemCount: listViewTasksRowList.length,
@@ -220,6 +205,38 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
                                 focusColor: Colors.transparent,
                                 hoverColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
+                                onTap: () async {
+                                  await showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    enableDrag: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return GestureDetector(
+                                        onTap: () => _model
+                                                .unfocusNode.canRequestFocus
+                                            ? FocusScope.of(context)
+                                                .requestFocus(
+                                                    _model.unfocusNode)
+                                            : FocusScope.of(context).unfocus(),
+                                        child: Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: SizedBox(
+                                            height: 350.0,
+                                            child: CreatTaskComponentWidget(
+                                              goalId: widget.goalId!,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ).then((value) => safeSetState(() {}));
+
+                                  setState(
+                                      () => _model.requestCompleter = null);
+                                  await _model.waitForRequestCompleted();
+                                },
                                 onLongPress: () async {
                                   await showModalBottomSheet(
                                     isScrollControlled: true,
@@ -237,8 +254,11 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
                                         child: Padding(
                                           padding:
                                               MediaQuery.viewInsetsOf(context),
-                                          child: UpdateTaskComponentWidget(
-                                            rowtask: listViewTasksRow,
+                                          child: SizedBox(
+                                            height: 370.0,
+                                            child: UpdateTaskComponentWidget(
+                                              rowaTask: listViewTasksRow,
+                                            ),
                                           ),
                                         ),
                                       );
@@ -250,8 +270,8 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
                                   await _model.waitForRequestCompleted();
                                 },
                                 child: Container(
-                                  width: 100.0,
-                                  height: 49.0,
+                                  width: 61.0,
+                                  height: 61.0,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryBackground,
@@ -266,37 +286,47 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsetsDirectional.fromSTEB(
-                                        10.0, 5.0, 0.0, 5.0),
+                                        10.0, 0.0, 10.0, 0.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         if (listViewTasksRow.complete == true)
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              await TasksTable().update(
-                                                data: {
-                                                  'complete': false,
-                                                },
-                                                matchingRows: (rows) => rows.eq(
-                                                  'id',
-                                                  listViewTasksRow.id,
-                                                ),
-                                              );
-                                              setState(() => _model
-                                                  .requestCompleter = null);
-                                              await _model
-                                                  .waitForRequestCompleted();
-                                            },
-                                            child: FaIcon(
-                                              FontAwesomeIcons.solidCheckCircle,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
-                                              size: 24.0,
+                                          Padding(
+                                            padding:
+                                                const EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 5.0, 0.0),
+                                            child: InkWell(
+                                              splashColor: Colors.transparent,
+                                              focusColor: Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              highlightColor:
+                                                  Colors.transparent,
+                                              onTap: () async {
+                                                await TasksTable().update(
+                                                  data: {
+                                                    'complete': false,
+                                                  },
+                                                  matchingRows: (rows) =>
+                                                      rows.eq(
+                                                    'id',
+                                                    listViewTasksRow.id,
+                                                  ),
+                                                );
+                                                setState(() => _model
+                                                    .requestCompleter = null);
+                                                await _model
+                                                    .waitForRequestCompleted();
+                                              },
+                                              child: FaIcon(
+                                                FontAwesomeIcons
+                                                    .solidCheckCircle,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
+                                                size: 24.0,
+                                              ),
                                             ),
                                           ),
                                         if (listViewTasksRow.complete == false)
@@ -320,8 +350,8 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
                                               await _model
                                                   .waitForRequestCompleted();
                                             },
-                                            child: FaIcon(
-                                              FontAwesomeIcons.circle,
+                                            child: Icon(
+                                              Icons.circle_outlined,
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .secondaryText,
@@ -334,25 +364,37 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
                                             children: [
                                               if (listViewTasksRow.complete ==
                                                   false)
-                                                Text(
-                                                  valueOrDefault<String>(
-                                                    listViewTasksRow.title,
-                                                    '1',
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 0.0, 5.0, 0.0),
+                                                  child: Text(
+                                                    valueOrDefault<String>(
+                                                      listViewTasksRow.title,
+                                                      '0',
+                                                    ),
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .titleSmall
+                                                        .override(
+                                                          fontFamily: 'Poppins',
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                        ),
                                                   ),
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .titleSmall,
                                                 ),
                                               if (listViewTasksRow.complete ==
                                                   true)
                                                 Text(
                                                   valueOrDefault<String>(
-                                                    listViewTasksRow.title,
-                                                    '1',
+                                                    listViewTasksRow
+                                                        .description,
+                                                    '0',
                                                   ),
                                                   style: FlutterFlowTheme.of(
                                                           context)
-                                                      .titleSmall
+                                                      .bodyMedium
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         decoration:
@@ -363,42 +405,47 @@ class _TasksPageWidgetState extends State<TasksPageWidget>
                                             ],
                                           ),
                                         ),
-                                        FlutterFlowIconButton(
-                                          borderRadius: 20.0,
-                                          borderWidth: 1.0,
-                                          buttonSize: 41.0,
-                                          icon: Icon(
-                                            Icons.delete_outlined,
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            size: 20.0,
+                                        Padding(
+                                          padding:
+                                              const EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 10.0, 0.0),
+                                          child: FlutterFlowIconButton(
+                                            borderRadius: 20.0,
+                                            borderWidth: 1.0,
+                                            buttonSize: 40.0,
+                                            icon: Icon(
+                                              Icons.delete_outline,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .alternate,
+                                              size: 24.0,
+                                            ),
+                                            onPressed: () async {
+                                              await TasksTable().delete(
+                                                matchingRows: (rows) => rows.eq(
+                                                  'id',
+                                                  listViewTasksRow.id,
+                                                ),
+                                              );
+                                              setState(() => _model
+                                                  .requestCompleter = null);
+                                              await _model
+                                                  .waitForRequestCompleted();
+                                            },
                                           ),
-                                          onPressed: () async {
-                                            await TasksTable().delete(
-                                              matchingRows: (rows) => rows.eq(
-                                                'id',
-                                                listViewTasksRow.id,
-                                              ),
-                                            );
-                                            setState(() =>
-                                                _model.requestCompleter = null);
-                                            await _model
-                                                .waitForRequestCompleted();
-                                          },
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-                              ).animateOnPageLoad(animationsMap[
-                                  'containerOnPageLoadAnimation']!),
+                              ),
                             );
                           },
                         );
                       },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),

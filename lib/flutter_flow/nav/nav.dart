@@ -97,9 +97,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => const CreateAccountPageWidget(),
         ),
         FFRoute(
-          name: 'TasksPage',
-          path: '/tasksPage',
-          builder: (context, params) => TasksPageWidget(
+          name: 'TaskPage',
+          path: '/taskPage',
+          builder: (context, params) => TaskPageWidget(
             goalId: params.getParam('goalId', ParamType.int),
           ),
         )

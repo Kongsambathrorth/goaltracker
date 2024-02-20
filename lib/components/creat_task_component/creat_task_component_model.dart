@@ -7,11 +7,11 @@ class CreatTaskComponentModel
   ///  State fields for stateful widgets in this component.
 
   final formKey = GlobalKey<FormState>();
-  // State field(s) for TaskTtitle widget.
-  FocusNode? taskTtitleFocusNode;
-  TextEditingController? taskTtitleController;
-  String? Function(BuildContext, String?)? taskTtitleControllerValidator;
-  String? _taskTtitleControllerValidator(BuildContext context, String? val) {
+  // State field(s) for TaskTitle widget.
+  FocusNode? taskTitleFocusNode;
+  TextEditingController? taskTitleController;
+  String? Function(BuildContext, String?)? taskTitleControllerValidator;
+  String? _taskTitleControllerValidator(BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
       return 'Field is required';
     }
@@ -19,11 +19,11 @@ class CreatTaskComponentModel
     return null;
   }
 
-  // State field(s) for TaskDecription widget.
-  FocusNode? taskDecriptionFocusNode;
-  TextEditingController? taskDecriptionController;
-  String? Function(BuildContext, String?)? taskDecriptionControllerValidator;
-  String? _taskDecriptionControllerValidator(
+  // State field(s) for TaskDescription widget.
+  FocusNode? taskDescriptionFocusNode;
+  TextEditingController? taskDescriptionController;
+  String? Function(BuildContext, String?)? taskDescriptionControllerValidator;
+  String? _taskDescriptionControllerValidator(
       BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
       return 'Field is required';
@@ -36,17 +36,17 @@ class CreatTaskComponentModel
 
   @override
   void initState(BuildContext context) {
-    taskTtitleControllerValidator = _taskTtitleControllerValidator;
-    taskDecriptionControllerValidator = _taskDecriptionControllerValidator;
+    taskTitleControllerValidator = _taskTitleControllerValidator;
+    taskDescriptionControllerValidator = _taskDescriptionControllerValidator;
   }
 
   @override
   void dispose() {
-    taskTtitleFocusNode?.dispose();
-    taskTtitleController?.dispose();
+    taskTitleFocusNode?.dispose();
+    taskTitleController?.dispose();
 
-    taskDecriptionFocusNode?.dispose();
-    taskDecriptionController?.dispose();
+    taskDescriptionFocusNode?.dispose();
+    taskDescriptionController?.dispose();
   }
 
   /// Action blocks are added here.

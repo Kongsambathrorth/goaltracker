@@ -19,10 +19,10 @@ class FFAppState extends ChangeNotifier {
   Future initializePersistedState() async {
     prefs = await SharedPreferences.getInstance();
     _safeInit(() {
-      if (prefs.containsKey('ff_filters')) {
+      if (prefs.containsKey('ff_filter')) {
         try {
-          final serializedData = prefs.getString('ff_filters') ?? '{}';
-          _filters =
+          final serializedData = prefs.getString('ff_filter') ?? '{}';
+          _filter =
               FiltersStruct.fromSerializableMap(jsonDecode(serializedData));
         } catch (e) {
           print("Can't decode persisted data type. Error: $e.");
@@ -38,16 +38,16 @@ class FFAppState extends ChangeNotifier {
 
   late SharedPreferences prefs;
 
-  FiltersStruct _filters = FiltersStruct.fromSerializableMap(jsonDecode('{}'));
-  FiltersStruct get filters => _filters;
-  set filters(FiltersStruct value) {
-    _filters = value;
-    prefs.setString('ff_filters', value.serialize());
+  FiltersStruct _filter = FiltersStruct();
+  FiltersStruct get filter => _filter;
+  set filter(FiltersStruct value) {
+    _filter = value;
+    prefs.setString('ff_filter', value.serialize());
   }
 
-  void updateFiltersStruct(Function(FiltersStruct) updateFn) {
-    updateFn(_filters);
-    prefs.setString('ff_filters', _filters.serialize());
+  void updateFilterStruct(Function(FiltersStruct) updateFn) {
+    updateFn(_filter);
+    prefs.setString('ff_filter', _filter.serialize());
   }
 }
 

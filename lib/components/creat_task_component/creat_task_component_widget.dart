@@ -35,11 +35,11 @@ class _CreatTaskComponentWidgetState extends State<CreatTaskComponentWidget> {
     super.initState();
     _model = createModel(context, () => CreatTaskComponentModel());
 
-    _model.taskTtitleController ??= TextEditingController();
-    _model.taskTtitleFocusNode ??= FocusNode();
+    _model.taskTitleController ??= TextEditingController();
+    _model.taskTitleFocusNode ??= FocusNode();
 
-    _model.taskDecriptionController ??= TextEditingController();
-    _model.taskDecriptionFocusNode ??= FocusNode();
+    _model.taskDescriptionController ??= TextEditingController();
+    _model.taskDescriptionFocusNode ??= FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -112,8 +112,8 @@ class _CreatTaskComponentWidgetState extends State<CreatTaskComponentWidget> {
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
                 child: TextFormField(
-                  controller: _model.taskTtitleController,
-                  focusNode: _model.taskTtitleFocusNode,
+                  controller: _model.taskTitleController,
+                  focusNode: _model.taskTitleFocusNode,
                   obscureText: false,
                   decoration: InputDecoration(
                     labelText: 'Enter the goal title...',
@@ -163,14 +163,14 @@ class _CreatTaskComponentWidgetState extends State<CreatTaskComponentWidget> {
                       ),
                   textAlign: TextAlign.start,
                   validator:
-                      _model.taskTtitleControllerValidator.asValidator(context),
+                      _model.taskTitleControllerValidator.asValidator(context),
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
+                padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 16.0),
                 child: TextFormField(
-                  controller: _model.taskDecriptionController,
-                  focusNode: _model.taskDecriptionFocusNode,
+                  controller: _model.taskDescriptionController,
+                  focusNode: _model.taskDescriptionFocusNode,
                   obscureText: false,
                   decoration: InputDecoration(
                     labelText: 'Enter your goal description...',
@@ -221,7 +221,7 @@ class _CreatTaskComponentWidgetState extends State<CreatTaskComponentWidget> {
                   textAlign: TextAlign.start,
                   maxLines: 4,
                   keyboardType: TextInputType.multiline,
-                  validator: _model.taskDecriptionControllerValidator
+                  validator: _model.taskDescriptionControllerValidator
                       .asValidator(context),
                 ),
               ),
@@ -241,9 +241,9 @@ class _CreatTaskComponentWidgetState extends State<CreatTaskComponentWidget> {
                               return;
                             }
                             await TasksTable().insert({
-                              'title': _model.taskTtitleController.text,
+                              'title': _model.taskTitleController.text,
                               'description':
-                                  _model.taskDecriptionController.text,
+                                  _model.taskDescriptionController.text,
                               'goal_id': widget.goalId,
                               'complete': false,
                               'user_id': currentUserUid,

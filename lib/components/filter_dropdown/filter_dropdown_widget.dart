@@ -46,6 +46,25 @@ class _FilterDropdownWidgetState extends State<FilterDropdownWidget>
         ),
       ],
     ),
+    'checkboxOnPageLoadAnimation': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effects: [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 300.ms,
+          begin: -20.0,
+          end: 1.0,
+        ),
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 300.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
+    ),
   };
 
   @override
@@ -145,19 +164,18 @@ class _FilterDropdownWidgetState extends State<FilterDropdownWidget>
                           FlutterFlowTheme.of(context).secondaryText,
                     ),
                     child: Checkbox(
-                      value: _model.checkboxValue ??=
-                          FFAppState().filters.archived,
+                      value: _model.checkboxValue ??= true,
                       onChanged: (newValue) async {
                         setState(() => _model.checkboxValue = newValue!);
                         if (newValue!) {
                           setState(() {
-                            FFAppState().updateFiltersStruct(
+                            FFAppState().updateFilterStruct(
                               (e) => e..archived = true,
                             );
                           });
                         } else {
                           setState(() {
-                            FFAppState().updateFiltersStruct(
+                            FFAppState().updateFilterStruct(
                               (e) => e..archived = false,
                             );
                           });
@@ -167,7 +185,8 @@ class _FilterDropdownWidgetState extends State<FilterDropdownWidget>
                       checkColor:
                           FlutterFlowTheme.of(context).primaryButtonText,
                     ),
-                  ),
+                  ).animateOnPageLoad(
+                      animationsMap['checkboxOnPageLoadAnimation']!),
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
